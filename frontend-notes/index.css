@@ -1,9 +1,59 @@
-#map {
-  height: 100%;
-}
-
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+#map {
+  position:absolute;
+  top:0;
+  bottom:0;
+  /* height:80%; */
+  width: 100%
+}
+
+#menu {
+position: sticky;
+background: #fff;
+padding: 10px;
+font-family: 'Open Sans', sans-serif;
+}
+
+
+#zoom  {
+display: block;
+position: relative;
+margin: 40px auto;
+width: 50%;
+height: 40px;
+padding: 10px;
+border: none;
+border-radius: 3px;
+font-size: 12px;
+text-align: center;
+color: #fff;
+background: #ee8a65;
+}
+
+.geocoder {
+position:absolute;
+z-index:1;
+width:50%;
+left:50%;
+margin-left:-25%;
+top:20px;
+}
+
+.mapboxgl-ctrl-geocoder {
+  min-width:100%;
+  display: block;
+  position: relative;
+  margin: 20px auto;
+  width: 50%;
+  height: 40px;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  font-size: 18px;
+  text-align: center;
 }
