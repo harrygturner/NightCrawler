@@ -3,7 +3,7 @@
 const state = {
   date: todayDate(),
   clientToken: 'hS6UafQpEo2tCAKxSUcFP04hy48V02',
-  currentLocation: [51.520470, -0.087260],
+  currentLocation: null, // [long, lat]
   events: [],
   geojsonIcons: {}
 }
@@ -87,8 +87,6 @@ function convertToGeoJSON(event) {
   state.geojsonIcons.features.push(icon);
 }
 
-<<<<<<< HEAD
-
 // renders an icon for each event and places it in there correct position on map
 function convertToGeoJSON(event) {
   const eventLat = event.location[0];
@@ -114,17 +112,14 @@ function convertToGeoJSON(event) {
 }
 
 
-// Map Box API
-=======
 //------------------------- Map Box API -----------------------------
->>>>>>> ffb7b278798b497e92256829b5e600980f37180a
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpZm94IiwiYSI6ImNqczFud2tiNzBlbTI0M2t2aGpuMzBqb2QifQ.xc_ZOhqTlgjd3sIoLBrS9Q';
 let map = new mapboxgl.Map({
 container: 'map', // container id
 style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
 center: [-0.127888, 51.507734], // starting position [lng, lat]
-zoom: 1 // starting zoom
+zoom: 7 // starting zoom
 });
 
 map.on('load', function() {
@@ -159,30 +154,31 @@ const geocoder = new MapboxGeocoder({
 
 map.addControl(geocoder);
 
-// After the map style has loaded on the page, add a source layer and default
-// styling for a single point.
-map.on('load', function() {
-map.addSource('single-point', {
-"type": "geojson",
-"data": {
-"type": "FeatureCollection",
-"features": []
-}
-});
+  // After the map style has loaded on the page, add a source layer and default
+  // styling for a single point.
+  map.on('load', function() {
+  map.addSource('single-point', {
+  "type": "geojson",
+  "data": {
+  "type": "FeatureCollection",
+  "features": []
+  }
+  });
 
-map.addLayer({
-"id": "point",
-"source": "single-point",
-"type": "circle",
-"paint": {
-"circle-radius": 10,
-"circle-color": "#007cbf"
-}
-});
+  map.addLayer({
+  "id": "point",
+  "source": "single-point",
+  "type": "circle",
+  "paint": {
+  "circle-radius": 10,
+  "circle-color": "#007cbf"
+  }
+  });
 
-// Listen for the `result` event from the MapboxGeocoder that is triggered when a user
-// makes a selection and add a symbol that matches the result.
-geocoder.on('result', function(ev) {
-map.getSource('single-point').setData(ev.result.geometry);
-});
+  // Listen for the `result` event from the MapboxGeocoder that is triggered when a user
+  // makes a selection and add a symbol that matches the result.
+  geocoder.on('result', function(ev) {
+    map.getSource('single-point').setData(ev.result.geometry);
+    state.currentLocation  = geocoder._map._easeOptions.center;
+  });
 });
