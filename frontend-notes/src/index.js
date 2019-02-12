@@ -63,7 +63,7 @@ function getEventsLocation(array) {
   debugger
 }
 
-// renders an icon for each event and places it in there correct position on map
+// convert icons into geojson format
 function convertToGeoJSON(event) {
   const eventLat = event.location[0];
   const eventLong = event.location[1];
@@ -86,6 +86,8 @@ function convertToGeoJSON(event) {
   };
   state.geojsonIcons.features.push(icon);
 }
+
+
 
 function initMap() {
   const latlng = new google.maps.LatLng(51.507734, -0.127888)
