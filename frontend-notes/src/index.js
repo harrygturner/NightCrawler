@@ -8,6 +8,38 @@ const state = {
   geojsonIcons: {}
 }
 
+//------------------------- Map Box API -----------------------------
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpZm94IiwiYSI6ImNqczFud2tiNzBlbTI0M2t2aGpuMzBqb2QifQ.xc_ZOhqTlgjd3sIoLBrS9Q';
+let map = new mapboxgl.Map({
+  container: 'map', // container id
+  style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+  center: [-0.127888, 51.507734], // starting position [lng, lat]
+  zoom: 7 // starting zoom
+});
+
+map.on('load', function() {
+  map.setPaintProperty('building', 'fill-color', [
+    "interpolate",
+    ["exponential", 0.5],
+    ["zoom"],
+    15,
+    "#e2714b",
+    22,
+    "#eee695"
+  ]);
+
+  map.setPaintProperty('building', 'fill-opacity', [
+    "interpolate",
+    ["exponential", 0.5],
+    ["zoom"],
+    15,
+    0,
+    22,
+    1
+  ]);
+});
+
 // ------------------------ Format Date ---------------------------------
 
 function formatDate(date) {
@@ -42,7 +74,6 @@ function getEventsFromUserLocation(range=2) {
     // .then(resp => resp.json())
 
   // will return an array of events within a specific range
-  debugger
   return fetch(`https://api.predicthq.com/v1/events/?limit=40&within=${range}km@${userLatitude},${userLongitude}`, {
     method: 'GET',
     headers: {
@@ -65,8 +96,8 @@ function getEventsLocation(array) {
 
 // convert icons into geojson format
 function convertToGeoJSON(event) {
-  const eventLat = event.location[1];
   const eventLong = event.location[0];
+  const eventLat = event.location[1];
   const icon = {
     "type": "Feature",
      "properties": {
@@ -79,70 +110,28 @@ function convertToGeoJSON(event) {
      "geometry": {
        "type": "Point",
        "coordinates": [
-         eventLat,
-         eventLong
+         eventLong,
+         eventLat
        ]
      }
   };
   state.geojsonIcons.features.push(icon);
+  renderMarkers();
 }
 
-// renders an icon for each event and places it in there correct position on map
-function convertToGeoJSON(event) {
-  const eventLat = event.location[0];
-  const eventLong = event.location[1];
-  const icon = {
-    "type": "Feature",
-     "properties": {
-       "marker-color": "#2c607e",
-       "marker-size": "medium",
-       "marker-symbol": "",
-       "title": `${event.title}`,
-       "description": `${event.description}`
-     },
-     "geometry": {
-       "type": "Point",
-       "coordinates": [
-         eventLat,
-         eventLong
-       ]
-     }
-  };
-  state.geojsonIcons.features.push(icon);
+// render icons onto page
+function renderMarkers() {
+  state.geojsonIcons.features.forEach( marker => {
+    const markerEl = document.createElement('div');
+    markerEl.className = 'marker';
+
+    new mapboxgl.Marker(markerEl)
+      .setLngLat(marker.geometry.coordinates)
+      .addTo(map);
+  })
+
 }
 
-
-//------------------------- Map Box API -----------------------------
-
-mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpZm94IiwiYSI6ImNqczFud2tiNzBlbTI0M2t2aGpuMzBqb2QifQ.xc_ZOhqTlgjd3sIoLBrS9Q';
-let map = new mapboxgl.Map({
-container: 'map', // container id
-style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
-center: [-0.127888, 51.507734], // starting position [lng, lat]
-zoom: 7 // starting zoom
-});
-
-map.on('load', function() {
-  map.setPaintProperty('building', 'fill-color', [
-    "interpolate",
-    ["exponential", 0.5],
-    ["zoom"],
-    15,
-    "#e2714b",
-    22,
-    "#eee695"
-  ]);
-
-  map.setPaintProperty('building', 'fill-opacity', [
-    "interpolate",
-    ["exponential", 0.5],
-    ["zoom"],
-    15,
-    0,
-    22,
-    1
-    ]);
-});
 
 document.getElementById('zoom').addEventListener('click', function () {
   map.zoomTo(17, {duration: 9000});
@@ -180,5 +169,6 @@ map.addControl(geocoder);
   geocoder.on('result', function(ev) {
     map.getSource('single-point').setData(ev.result.geometry);
     state.currentLocation  = geocoder._map._easeOptions.center;
+    getEventsFromUserLocation(2);
   });
 });
