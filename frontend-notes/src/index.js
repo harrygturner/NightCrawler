@@ -87,42 +87,7 @@ function convertToGeoJSON(event) {
   state.geojsonIcons.features.push(icon);
 }
 
-
-
-function initMap() {
-  const latlng = new google.maps.LatLng(51.507734, -0.127888)
-  const map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 10,
-    center: latlng
-  });
-}
-
-// renders an icon for each event and places it in there correct position on map
-function convertToGeoJSON(event) {
-  const eventLat = event.location[0];
-  const eventLong = event.location[1];
-  const icon = {
-    "type": "Feature",
-     "properties": {
-       "marker-color": "#2c607e",
-       "marker-size": "medium",
-       "marker-symbol": "",
-       "title": `${event.title}`,
-       "description": `${event.description}`
-     },
-     "geometry": {
-       "type": "Point",
-       "coordinates": [
-         eventLat,
-         eventLong
-       ]
-     }
-  };
-  state.geojsonIcons.features.push(icon);
-}
-
-
-// Map Box API
+//------------------------- Map Box API -----------------------------
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpZm94IiwiYSI6ImNqczFud2tiNzBlbTI0M2t2aGpuMzBqb2QifQ.xc_ZOhqTlgjd3sIoLBrS9Q';
 let map = new mapboxgl.Map({
@@ -155,11 +120,11 @@ map.on('load', function() {
 });
 
 document.getElementById('zoom').addEventListener('click', function () {
-map.zoomTo(17, {duration: 9000});
+  map.zoomTo(17, {duration: 9000});
 });
 
 const geocoder = new MapboxGeocoder({
-accessToken: mapboxgl.accessToken
+  accessToken: mapboxgl.accessToken
 });
 
 document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
