@@ -97,6 +97,69 @@ function initMap() {
   });
 }
 
-// function geoLocationMap() {
-//   const
-// }
+// renders an icon for each event and places it in there correct position on map
+function convertToGeoJSON(event) {
+  const eventLat = event.location[0];
+  const eventLong = event.location[1];
+  const icon = {
+    "type": "Feature",
+     "properties": {
+       "marker-color": "#2c607e",
+       "marker-size": "medium",
+       "marker-symbol": "",
+       "title": `${event.title}`,
+       "description": `${event.description}`
+     },
+     "geometry": {
+       "type": "Point",
+       "coordinates": [
+         eventLat,
+         eventLong
+       ]
+     }
+  };
+  state.geojsonIcons.features.push(icon);
+}
+
+
+// Map Box API
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpZm94IiwiYSI6ImNqczFud2tiNzBlbTI0M2t2aGpuMzBqb2QifQ.xc_ZOhqTlgjd3sIoLBrS9Q';
+let map = new mapboxgl.Map({
+container: 'map', // container id
+style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+center: [-0.127888, 51.507734], // starting position [lng, lat]
+zoom: 8 // starting zoom
+});
+
+map.on('load', function() {
+  map.setPaintProperty('building', 'fill-color', [
+    "interpolate",
+    ["exponential", 0.5],
+    ["zoom"],
+    15,
+    "#e2714b",
+    22,
+    "#eee695"
+  ]);
+
+  map.setPaintProperty('building', 'fill-opacity', [
+    "interpolate",
+    ["exponential", 0.5],
+    ["zoom"],
+    15,
+    0,
+    22,
+    1
+    ]);
+});
+
+document.getElementById('zoom').addEventListener('click', function () {
+map.zoomTo(17, {duration: 9000});
+});
+
+const geocoder = new MapboxGeocoder({
+accessToken: mapboxgl.accessToken
+});
+
+document.getElementById('geocoder').appendChild(geocoder.onAdd(map));

@@ -2,26 +2,43 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
     <title>Night Out</title>
 
     <link rel="stylesheet" href="index.css">
   </head>
   <body>
+    <header>
+      <div class='nav_bar'>
+        <h2>Plan Your Night</h2>
+      </div>
+    </header>
 
-    <div class='nav_bar'>
-      <h2>Plan Your Night</h2>
-    </div>
+
 
     <div class='location-form'>
-      
+
     </div>
 
+     <!-- quick change -->
     <div id='map'>
     </div>
+    <button id='zoom'>Zoom to buildings</button>
+    <div id='geocoder' class='geocoder'></div>
+    <!-- <div id='menu'>
+      <input id='basic' type='radio' name='rtoggle' value='basic' checked='checked'>
+      <label for='basic'>basic</label>
+      <input id='dark' type='radio' name='rtoggle' value='dark'>
+      <label for='dark'>dark</label>
+    </div> -->
 
 
 
+  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.0/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.0/mapbox-gl-geocoder.css' type='text/css' />
     <script type="text/javascript" src="src/index.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC45I3s_hzZ0cD7aUgI5hBeemysFh01oG0&callback=initMap&language=en"></script>
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC45I3s_hzZ0cD7aUgI5hBeemysFh01oG0&callback=initMap&language=en"></script> -->
   </body>
 </html>
