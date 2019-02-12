@@ -87,13 +87,6 @@ function convertToGeoJSON(event) {
   state.geojsonIcons.features.push(icon);
 }
 
-function initMap() {
-  const latlng = new google.maps.LatLng(51.507734, -0.127888)
-  const map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 10,
-    center: latlng
-  });
-}
 
 // renders an icon for each event and places it in there correct position on map
 function convertToGeoJSON(event) {
@@ -160,4 +153,32 @@ const geocoder = new MapboxGeocoder({
 accessToken: mapboxgl.accessToken
 });
 
-document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+map.addControl(geocoder);
+
+// After the map style has loaded on the page, add a source layer and default
+// styling for a single point.
+map.on('load', function() {
+map.addSource('single-point', {
+"type": "geojson",
+"data": {
+"type": "FeatureCollection",
+"features": []
+}
+});
+
+map.addLayer({
+"id": "point",
+"source": "single-point",
+"type": "circle",
+"paint": {
+"circle-radius": 10,
+"circle-color": "#007cbf"
+}
+});
+
+// Listen for the `result` event from the MapboxGeocoder that is triggered when a user
+// makes a selection and add a symbol that matches the result.
+geocoder.on('result', function(ev) {
+map.getSource('single-point').setData(ev.result.geometry);
+});
+});
