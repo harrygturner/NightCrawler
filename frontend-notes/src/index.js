@@ -30,8 +30,8 @@ function todayDate() {
 
 // returns an array of events around the users location
 function getEventsFromUserLocation(range=2) {
-  const userLatitude = state.currentLocation[0]
-  const userLongitude = state.currentLocation[1]
+  const userLongitude = state.currentLocation[0]
+  const userLatitude = state.currentLocation[1]
 
   // will return a bunch of events a hazy distance from loactaion
   // return fetch(`https://api.predicthq.com//v1/events/?location_around.origin=${userLatitude},${userLongitude}`, {
@@ -42,7 +42,8 @@ function getEventsFromUserLocation(range=2) {
     // .then(resp => resp.json())
 
   // will return an array of events within a specific range
-  return fetch(`https://api.predicthq.com/v1/events/?limit=40&end.lte=${state.date}&within=${range}km@${userLatitude},${userLongitude}`, {
+  debugger
+  return fetch(`https://api.predicthq.com/v1/events/?limit=40&within=${range}km@${userLatitude},${userLongitude}`, {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + state.clientToken
@@ -60,13 +61,12 @@ function getEventsLocation(array) {
     "features": []
   }
   state.events.forEach(convertToGeoJSON);
-  debugger
 }
 
 // convert icons into geojson format
 function convertToGeoJSON(event) {
-  const eventLat = event.location[0];
-  const eventLong = event.location[1];
+  const eventLat = event.location[1];
+  const eventLong = event.location[0];
   const icon = {
     "type": "Feature",
      "properties": {
