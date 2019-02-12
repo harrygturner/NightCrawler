@@ -1,4 +1,3 @@
-
 // state
 
 const state = {
@@ -73,8 +72,8 @@ function convertToGeoJSON(event) {
      "properties": {
        "marker-color": "#2c607e",
        "marker-size": "medium",
-       "marker-symbol": ""
-       "title": `${event.title}`
+       "marker-symbol": "",
+       "title": `${event.title}`,
        "description": `${event.description}`
      },
      "geometry": {
