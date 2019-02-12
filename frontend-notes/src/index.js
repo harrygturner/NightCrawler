@@ -94,7 +94,7 @@ let map = new mapboxgl.Map({
 container: 'map', // container id
 style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
 center: [-0.127888, 51.507734], // starting position [lng, lat]
-zoom: 8 // starting zoom
+zoom: 1 // starting zoom
 });
 
 map.on('load', function() {

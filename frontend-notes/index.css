@@ -8,15 +8,6 @@
    background:#fff;
    padding:10px;
    border-radius:3px;
-
-#map {
-  height: 100%;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 #map {
