@@ -63,7 +63,7 @@ function getEventsLocation(array) {
   debugger
 }
 
-// renders an icon for each event and places it in there correct position on map
+// convert icons into geojson format
 function convertToGeoJSON(event) {
   const eventLat = event.location[0];
   const eventLong = event.location[1];
@@ -87,6 +87,7 @@ function convertToGeoJSON(event) {
   state.geojsonIcons.features.push(icon);
 }
 
+<<<<<<< HEAD
 
 // renders an icon for each event and places it in there correct position on map
 function convertToGeoJSON(event) {
@@ -114,13 +115,16 @@ function convertToGeoJSON(event) {
 
 
 // Map Box API
+=======
+//------------------------- Map Box API -----------------------------
+>>>>>>> ffb7b278798b497e92256829b5e600980f37180a
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpZm94IiwiYSI6ImNqczFud2tiNzBlbTI0M2t2aGpuMzBqb2QifQ.xc_ZOhqTlgjd3sIoLBrS9Q';
 let map = new mapboxgl.Map({
 container: 'map', // container id
 style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
 center: [-0.127888, 51.507734], // starting position [lng, lat]
-zoom: 8 // starting zoom
+zoom: 1 // starting zoom
 });
 
 map.on('load', function() {
@@ -146,11 +150,11 @@ map.on('load', function() {
 });
 
 document.getElementById('zoom').addEventListener('click', function () {
-map.zoomTo(17, {duration: 9000});
+  map.zoomTo(17, {duration: 9000});
 });
 
 const geocoder = new MapboxGeocoder({
-accessToken: mapboxgl.accessToken
+  accessToken: mapboxgl.accessToken
 });
 
 map.addControl(geocoder);
