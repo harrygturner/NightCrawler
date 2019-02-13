@@ -133,21 +133,24 @@ function renderMarkers() {
     // debugger
     new mapboxgl.Marker(markerEl)
       .setLngLat(marker.geometry.coordinates)
-      // .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-      //   .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+      .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+        .setHTML(`
+          <h2>${marker.properties.title}</h2>
+          <p>${marker.properties.description}</p>
+        `))
       .addTo(map);
   })
 }
 
 // add event listener's to markers to identify the event clicked
-// function addEventListenerToMarkers(){
-//   document.addEventListener('click', event => {
-//     if(event.target.className.includes('marker')) {
-//       const eventId = event.target.dataset.id;
-//       state.selectedEvent = state.events.filter( event => event.id === eventId )[0];
-//     }
-//   })
-// }
+function addEventListenerToMarkers(){
+  document.addEventListener('click', event => {
+    if(event.target.className.includes('marker')) {
+      const eventId = event.target.dataset.id;
+      state.selectedEvent = state.events.filter( event => event.id === eventId )[0];
+    }
+  })
+}
 
 document.getElementById('zoom').addEventListener('click', function () {
   map.zoomTo(17, {duration: 9000});
@@ -186,7 +189,7 @@ map.addControl(geocoder);
   geocoder.on('result', function(ev) {
     map.getSource('single-point').setData(ev.result.geometry);
     state.currentLocation  = geocoder._map._easeOptions.center;
-    getEventsFromUserLocation(2);
-    // addEventListenerToMarkers();
+    getEventsFromUserLocation(1);
+    addEventListenerToMarkers();
   });
 });
