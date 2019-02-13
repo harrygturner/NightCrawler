@@ -192,7 +192,8 @@ document.getElementById('zoom').addEventListener('click', function () {
 });
 
 const geocoder = new MapboxGeocoder({
-  accessToken: mapboxgl.accessToken
+  accessToken: mapboxgl.accessToken,
+  zoom: 13
 });
 
 map.addControl(geocoder);
