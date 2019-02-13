@@ -64,6 +64,13 @@ function todayDate() {
   const today = new Date();
   return formatDate(today);
 }
+
+// ---------------------- Truncate word limit --------------------------
+
+function truncate(str, no_words) {
+    return str.split(" ").splice(0,no_words).join(" ");
+}
+
 // ------------------------- PredictHQ --------------------------------
 
 // returns an array of events around the users location
@@ -194,7 +201,7 @@ function addEvenetToSideBar() {
   eventEl = document.createElement('div');
   eventEl.className = 'event-info';
   eventEl.innerHTML = `
-    <h6 style='margin-bottom: 30px;'>${state.selectedEvent.title}</h6>
+    <h6 style='margin: 0px 0px 20px 10px;'>${state.selectedEvent.title}</h6>
     <div id="accordion">
       <div class="card">
         <div class="card-header" id="headingOne">
@@ -223,7 +230,7 @@ function addEvenetToSideBar() {
         </div>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
           <div class="card-body">
-            <p style='font-size: 14px;'>${state.selectedEvent.description !== '' ? `${state.selectedEvent.description}` : 'No information has been provided about this event please visit there website for further details.'}</p>
+            <p style='font-size: 14px;'>${state.selectedEvent.description !== '' ? `${truncate(state.selectedEvent.description, 80)}...` : 'No information has been provided about this event please visit there website for further details.'}</p>
           </div>
         </div>
       </div>
