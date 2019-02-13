@@ -1,3 +1,6 @@
+// things we will need to select/append element to
+const popupCont = document.querySelector('#popup-container')
+
 // state
 
 const state = {
@@ -5,6 +8,7 @@ const state = {
   clientToken: 'hS6UafQpEo2tCAKxSUcFP04hy48V02',
   currentLocation: null, // [long, lat]
   events: [],
+  selectedEvent: null,
   geojsonIcons: {}
 }
 
@@ -99,6 +103,7 @@ function convertToGeoJSON(event) {
   const eventLong = event.location[0];
   const eventLat = event.location[1];
   const icon = {
+    "id": `${event.id}`,
     "type": "Feature",
      "properties": {
        "marker-color": "#2c607e",
@@ -123,15 +128,40 @@ function convertToGeoJSON(event) {
 function renderMarkers() {
   state.geojsonIcons.features.forEach( marker => {
     const markerEl = document.createElement('div');
+    // debugger
     markerEl.className = 'marker';
-
+    markerEl.dataset.id = marker.id;
     new mapboxgl.Marker(markerEl)
       .setLngLat(marker.geometry.coordinates)
+      .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+        .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
       .addTo(map);
   })
 
 }
 
+// add event listener's to markers to identify the event clicked
+function addEventListenerToMarkers(){
+  document.addEventListener('click', event => {
+    if(event.target.className.includes('marker')) {
+      const eventId = event.target.dataset.id;
+      state.selectedEvent = state.events.filter( event => event.id === eventId )[0];
+    }
+  })
+}
+
+// render pop up of selected event
+// function renderPopUp() {
+//   const eventEl = document.createElement('div');
+//   // debugger
+//   eventEl.className = 'event-info-container';
+//   eventEl.innerHTML = `
+//     <h2>Hello</h2>
+//   `
+//   map.addLayer({
+//     popupCont.append(eventEl);
+//   })
+// }
 
 document.getElementById('zoom').addEventListener('click', function () {
   map.zoomTo(17, {duration: 9000});
@@ -143,32 +173,33 @@ const geocoder = new MapboxGeocoder({
 
 map.addControl(geocoder);
 
-  // After the map style has loaded on the page, add a source layer and default
-  // styling for a single point.
+// After the map style has loaded on the page, add a source layer and default
+// styling for a single point.
   map.on('load', function() {
-  map.addSource('single-point', {
-  "type": "geojson",
-  "data": {
-  "type": "FeatureCollection",
-  "features": []
-  }
+    map.addSource('single-point', {
+      "type": "geojson",
+      "data": {
+      "type": "FeatureCollection",
+      "features": []
+    }
   });
 
   map.addLayer({
-  "id": "point",
-  "source": "single-point",
-  "type": "circle",
-  "paint": {
-  "circle-radius": 10,
-  "circle-color": "#007cbf"
-  }
+    "id": "point",
+    "source": "single-point",
+    "type": "circle",
+    "paint": {
+      "circle-radius": 10,
+      "circle-color": "#007cbf"
+    }
   });
 
-  // Listen for the `result` event from the MapboxGeocoder that is triggered when a user
-  // makes a selection and add a symbol that matches the result.
+// Listen for the `result` event from the MapboxGeocoder that is triggered when a user
+// makes a selection and add a symbol that matches the result.
   geocoder.on('result', function(ev) {
     map.getSource('single-point').setData(ev.result.geometry);
     state.currentLocation  = geocoder._map._easeOptions.center;
-    getEventsFromUserLocation(2);
+    getEventsFromUserLocation(1);
+    addEventListenerToMarkers();
   });
 });

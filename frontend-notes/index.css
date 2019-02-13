@@ -4,18 +4,6 @@ html, body {
   padding: 0;
 }
 
-.info {
-   position:absolute;
-   top:10px;
-   right:10px;
-}
-
-.info div {
-   background:#fff;
-   padding:10px;
-   border-radius:3px;
-}
-
 #map {
   position:absolute;
   top:0;
@@ -60,27 +48,19 @@ color: #fff;
 background: #ee8a65;
 }
 
-.geocoder {
+/* .geocoder {
 position:absolute;
 z-index:1;
 width:50%;
 left:50%;
 margin-left:-25%;
 top:20px;
-}
+} */
 
 .mapboxgl-ctrl-geocoder {
-  min-width:100%;
-  display: block;
-  position: relative;
-  margin: 20px auto;
-  width: 50%;
-  height: 40px;
-  padding: 10px;
-  border: none;
-  border-radius: 3px;
-  font-size: 18px;
-  text-align: center;
+  position: fixed;
+  left: 25%;
+  top: 40%;
 }
 
 .marker {
@@ -90,4 +70,14 @@ top:20px;
   height: 20px;
   border-radius: 50%;
   cursor: pointer;.
+}
+
+#popupCont {
+  z-index: 5;
+}
+
+.event-info-container {
+  background-color: red;
+  color: white;
+  z-index: 5;
 }
