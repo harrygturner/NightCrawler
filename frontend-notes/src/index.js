@@ -100,8 +100,33 @@ function getEventsLocation(array) {
 
 // convert icons into geojson format
 function convertToGeoJSON(event) {
-  const eventLong = event.location[0];
-  const eventLat = event.location[1];
+  const eventLat = event.location[0];
+  const eventLong = event.location[1];
+  const icon = {
+    "type": "Feature",
+     "properties": {
+       "marker-color": "#2c607e",
+       "marker-size": "medium",
+       "marker-symbol": "",
+       "title": `${event.title}`,
+       "description": `${event.description}`
+     },
+     "geometry": {
+       "type": "Point",
+       "coordinates": [
+         eventLat,
+         eventLong
+       ]
+     }
+  };
+  state.geojsonIcons.features.push(icon);
+}
+
+
+// renders an icon for each event and places it in there correct position on map
+function convertToGeoJSON(event) {
+  const eventLat = event.location[0];
+  const eventLong = event.location[1];
   const icon = {
     "id": `${event.id}`,
     "type": "Feature",
@@ -128,16 +153,15 @@ function convertToGeoJSON(event) {
 function renderMarkers() {
   state.geojsonIcons.features.forEach( marker => {
     const markerEl = document.createElement('div');
-    // debugger
     markerEl.className = 'marker';
     markerEl.dataset.id = marker.id;
+
     new mapboxgl.Marker(markerEl)
       .setLngLat(marker.geometry.coordinates)
       .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
         .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
       .addTo(map);
   })
-
 }
 
 // add event listener's to markers to identify the event clicked
