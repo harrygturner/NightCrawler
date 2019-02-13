@@ -11,7 +11,8 @@ const state = {
   currentLocation: null, // [long, lat]
   events: [],
   selectedEvent: null,
-  geojsonIcons: {}
+  geojsonIcons: {},
+  restaurants: []
 }
 
 //------------------------- Map Box API -----------------------------
@@ -164,6 +165,7 @@ function renderMarkers() {
       .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
         .setHTML(`
           <h6>${marker.properties.title}</h6>
+          <button type='button' class='btn btn-light rest-btn'>Find Restaurants Nearby</button>
         `))
       .addTo(map);
   })
@@ -244,6 +246,7 @@ function addAddBtn() {
   const addBtn = document.createElement('button')
   addBtn.className = 'btn btn-light add-btn'
   addBtn.innerText = 'Add to Night'
+  // addBtn.addEvent
   sidebar.append(addBtn)
 }
 
@@ -310,10 +313,44 @@ const userLocation = map.addControl(tracker);
     state.currentLocation = userLoc;
     getEventsFromUserLocation(2);
     addEventListenerToMarkers();
+    restaurantBtnListener();
   })
 });
 
-// event listener to see if user clicks on find current location button
-function userLocationBtnClicked() {
+// ---------------------------------- restaurants ----------------------------------------
+// add event listener to find restaurant button
+function restaurantBtnListener() {
+  document.addEventListener('click', event => {
+    if(event.target.className.includes('rest-btn')) {
+      getNearbyRestaurants()
+    }
+  })
+}
 
+// attempt at trying to start the google place search
+const getNearbyRestaurants = () => {
+  const service = new google.maps.places.PlacesService(document.createElement('div'))
+  const markerLatLng = new google.maps.LatLng({lat: state.selectedEvent.location[1], lng: state.selectedEvent.location[0]})
+  const request = {
+    location: markerLatLng,
+    radius: '500',
+    type: ['restaurant']
+  }
+  service.nearbySearch(request, (places) => places.forEach(renderPlace));
+};
+
+const renderPlace = place => {
+  const placeName = place.name
+  const placeCoordinates = [place.geometry.location.lat(), place.geometry.location.lng()]
+  // const placeOpenNow = place.opening_hours.open_now
+  const placeRating = place.rating
+  const placePriceLevel = place.price_level
+  const newRestaurant = {
+    name: placeName,
+    coordinates: placeCoordinates,
+    // openNow: placeOpenNow,
+    rating: placeRating,
+    priveLevel: placePriceLevel
+  }
+  state.restaurants.push(newRestaurant)
 }

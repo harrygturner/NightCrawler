@@ -7,17 +7,22 @@ html, body {
 body{
   display: flex;
 }
+
 #map {
   position:relative;
   top:100;
   bottom:0;
   height:100%;
-  width: 100%
+  width: 100%;
+  -webkit-transition-timing-function: ease-in;
+  -webkit-transition: width 2s;
+  transition: width 2s;
 }
 
 #side-nav {
   position: relative;
   height: 100%;
+  -webkit-transition: width 2s;
   width: 20%;
   float: left;
 }
@@ -101,25 +106,11 @@ background: #ee8a65;
   border: 1px solid black;
   border-radius: 50%;
   padding: 5px;
-  /* border: 8px solid #fff; */
   width: 25px;
   height: 25px;
   border-radius: 50%;
   cursor: pointer;
 }
-
-/* .marker::before {
-  position: absolute;
-  content: '';
-  width: 0px;
-  height: 0px;
-  bottom: -20px;
-  left: 0px;
-  border: 10px solid transparent;
-  border-top: 17px solid red;
-  z-index: 2;
-} */
-
 
 .concert {
   background-image: url('../public/images/piano.png');
