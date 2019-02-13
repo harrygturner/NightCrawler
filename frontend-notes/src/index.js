@@ -169,7 +169,15 @@ const geocoder = new MapboxGeocoder({
   zoom: 14.5
 });
 
-map.addControl(geocoder);
+const findLocation = map.addControl(geocoder);
+
+// Here's the code for locating the user, need to have event listener for if either this or the findLocation is clicked. And then to find events based on that
+const userLocation = map.addControl(new mapboxgl.GeolocateControl({
+positionOptions: {
+enableHighAccuracy: true
+},
+trackUserLocation: true
+}));
 
 // After the map style has loaded on the page, add a source layer and default
 // styling for a single point.
