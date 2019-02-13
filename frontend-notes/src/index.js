@@ -87,7 +87,6 @@ function convertToGeoJSON(event) {
   state.geojsonIcons.features.push(icon);
 }
 
-<<<<<<< HEAD
 
 // renders an icon for each event and places it in there correct position on map
 function convertToGeoJSON(event) {
@@ -115,9 +114,6 @@ function convertToGeoJSON(event) {
 
 
 // Map Box API
-=======
-//------------------------- Map Box API -----------------------------
->>>>>>> ffb7b278798b497e92256829b5e600980f37180a
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpZm94IiwiYSI6ImNqczFud2tiNzBlbTI0M2t2aGpuMzBqb2QifQ.xc_ZOhqTlgjd3sIoLBrS9Q';
 let map = new mapboxgl.Map({
