@@ -1,5 +1,6 @@
 // things we will need to select/append element to
-const popupCont = document.querySelector('#popup-container')
+const sidebar = document.querySelector('#side-nav');
+
 
 // state
 
@@ -103,9 +104,10 @@ function convertToGeoJSON(event) {
   const eventLong = event.location[0];
   const eventLat = event.location[1];
   const icon = {
-    "id": `${event.id}`,
+    "id": `marker`,
     "type": "Feature",
      "properties": {
+       "id": `${event.id}`,
        "marker-color": "#2c607e",
        "marker-size": "medium",
        "marker-symbol": "",
@@ -129,16 +131,17 @@ function renderMarkers() {
   state.geojsonIcons.features.forEach( marker => {
     const markerEl = document.createElement('div');
     markerEl.className = 'marker';
-    markerEl.dataset.id = marker.id;
-    // debugger
+    markerEl.dataset.id = marker.properties.id;
     new mapboxgl.Marker(markerEl)
       .setLngLat(marker.geometry.coordinates)
       .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
         .setHTML(`
-          <h2>${marker.properties.title}</h2>
-          <p>${marker.properties.description}</p>
+          <p>${marker.properties.title}<p>
         `))
       .addTo(map);
+    // map.on('click', `marker`, function (marker) {
+    //   map.flyTo({center: marker.geometry.coordinates});
+    // });
   })
 }
 
@@ -148,17 +151,22 @@ function addEventListenerToMarkers(){
     if(event.target.className.includes('marker')) {
       const eventId = event.target.dataset.id;
       state.selectedEvent = state.events.filter( event => event.id === eventId )[0];
+      map.flyTo({center: state.selectedEvent.location});
+      document.querySelector('#map').style.width = '80%';
+      sidebar.className = '';
+      // addToNavBar();
     }
   })
 }
 
-document.getElementById('zoom').addEventListener('click', function () {
-  map.zoomTo(17, {duration: 9000});
-});
+// -------------------- populate the side navbar -------------------------
+// function addToNavBar() {
+//   usernameEl = do
+// }
 
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
-  zoom: 13
+  zoom: 14.5
 });
 
 map.addControl(geocoder);
@@ -183,6 +191,8 @@ map.addControl(geocoder);
       "circle-color": "#007cbf"
     }
   });
+
+// Center map on the coordinates of any clicked marker
 
 // Listen for the `result` event from the MapboxGeocoder that is triggered when a user
 // makes a selection and add a symbol that matches the result.

@@ -9,35 +9,22 @@
     <title>Night Out</title>
   </head>
   <body>
-    <header>
-      <div class='nav_bar'>
-        <h2>Plan Your Night</h2>
-      </div>
-    </header>
+    <!-- <div class='container'> -->
 
+     <div id='map'>
+     </div>
+     <div id='geocoder' class='geocoder'></div>
 
+     <div id="side-nav" class="hide">
+       <div class="username">
+       </div>
+       <div class="event-det">
+       </div>
+       <button class='add-btn'>Add to Night</button>
+     </div>
+   <!-- </div> -->
 
-    <div class='location-form'>
-
-    </div>
-
-     <!-- quick change -->
-    <div id='map'>
-    </div>
-    <button id='zoom'>Zoom to buildings</button>
-    <div id='geocoder' class='geocoder'></div>
-    <!-- <div id='menu'>
-      <input id='basic' type='radio' name='rtoggle' value='basic' checked='checked'>
-      <label for='basic'>basic</label>
-      <input id='dark' type='radio' name='rtoggle' value='dark'>
-      <label for='dark'>dark</label>
-    </div> -->
-
-    <div id="popup-container">
-
-    </div>
-
-  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.0/mapbox-gl-geocoder.min.js'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.0/mapbox-gl-geocoder.min.js'></script>
     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.0/mapbox-gl-geocoder.css' type='text/css' />
     <script type="text/javascript" src="src/index.js"></script>
   </body>
