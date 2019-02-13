@@ -19,11 +19,11 @@ body{
   position: relative;
   height: 100%;
   width: 20%;
-  float: right;
+  float: left;
 }
 
 .username {
-  position: absolute;
+  position: relative;
   width: 98%;
   height: 74px;
   left: 6px;
@@ -35,7 +35,7 @@ body{
 }
 
 .event-det {
-  position: absolute;
+  position: relative;
   width: 98%;
   height: 386px;
   left: 6px;
@@ -86,15 +86,6 @@ color: #fff;
 background: #ee8a65;
 }
 
-/* .geocoder {
-position:absolute;
-z-index:1;
-width:50%;
-left:50%;
-margin-left:-25%;
-top:20px;
-} */
-
 .mapboxgl-ctrl-geocoder {
   position: relative;
   /* left: %; */
@@ -103,21 +94,65 @@ top:20px;
 .container{
   display: flex;
 }
+
 .marker {
-  background-color: red;
-  /* background-size: cover; */
-  width: 20px;
-  height: 20px;
+  background-color: white;
+  background-size: cover;
+  border: 1px solid black;
   border-radius: 50%;
-  cursor: pointer;.
+  padding: 5px;
+  /* border: 8px solid #fff; */
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
-#popupCont {
-  z-index: 5;
+/* .marker::before {
+  position: absolute;
+  content: '';
+  width: 0px;
+  height: 0px;
+  bottom: -20px;
+  left: 0px;
+  border: 10px solid transparent;
+  border-top: 17px solid red;
+  z-index: 2;
+} */
+
+
+.concert {
+  background-image: url('../public/images/piano.png');
 }
 
-.event-info-container {
-  background-color: red;
-  color: white;
-  z-index: 5;
+.sport {
+  background-image: url('../public/images/soccer-ball.png');
+}
+
+.conference {
+  background-image: url('../public/images/presentation.png');
+}
+
+.theatre {
+  background-image: url('../public/images/masks.png');
+}
+
+.community {
+  background-image: url('../public/images/beer.png');
+}
+
+.user-info {
+  margin: 10px 0px;
+  text-align: center;
+}
+
+.event-info {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.add-btn {
+  margin-top: 20px;
+  padding: 0px 20px;
+  margin-left: 20px;
 }

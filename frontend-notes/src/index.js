@@ -1,12 +1,13 @@
 // things we will need to select/append element to
 const sidebar = document.querySelector('#side-nav');
-
+const btn = document.querySelector('#geocoder');
 
 // state
 
 const state = {
   date: todayDate(),
   clientToken: 'hS6UafQpEo2tCAKxSUcFP04hy48V02',
+  userLocationClicked: false,
   currentLocation: null, // [long, lat]
   events: [],
   selectedEvent: null,
@@ -108,6 +109,7 @@ function convertToGeoJSON(event) {
     "type": "Feature",
      "properties": {
        "id": `${event.id}`,
+       "category": `${event.category}`,
        "marker-color": "#2c607e",
        "marker-size": "medium",
        "marker-symbol": "",
@@ -130,18 +132,33 @@ function convertToGeoJSON(event) {
 function renderMarkers() {
   state.geojsonIcons.features.forEach( marker => {
     const markerEl = document.createElement('div');
-    markerEl.className = 'marker';
+    switch(marker.properties.category){
+      case 'community':
+        markerEl.className = 'marker community';
+        break;
+      case 'concerts':
+        markerEl.className = 'marker concert';
+        break;
+      case 'performing-arts':
+        markerEl.className = 'marker theatre';
+        break;
+      case 'conferences':
+        markerEl.className = 'marker conference';
+        break;
+      case 'sports':
+        markerEl.className = 'marker sport';
+        break;
+      default:
+        markerEl.className = 'marker';
+    }
     markerEl.dataset.id = marker.properties.id;
     new mapboxgl.Marker(markerEl)
       .setLngLat(marker.geometry.coordinates)
       .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
         .setHTML(`
-          <p>${marker.properties.title}<p>
+          <h6>${marker.properties.title}</h6>
         `))
       .addTo(map);
-    // map.on('click', `marker`, function (marker) {
-    //   map.flyTo({center: marker.geometry.coordinates});
-    // });
   })
 }
 
@@ -153,16 +170,83 @@ function addEventListenerToMarkers(){
       state.selectedEvent = state.events.filter( event => event.id === eventId )[0];
       map.flyTo({center: state.selectedEvent.location});
       document.querySelector('#map').style.width = '80%';
+      document.querySelector('#map').style.float = 'right';
       sidebar.className = '';
-      // addToNavBar();
+      sidebar.innerHTML = '';
+      addAllToSideBar();
     }
   })
 }
 
 // -------------------- populate the side navbar -------------------------
-// function addToNavBar() {
-//   usernameEl = do
-// }
+// add user to nav bar
+function addUserToSideBar() {
+  usernameEl = document.createElement('div');
+  usernameEl.className = 'user-info';
+  usernameEl.innerHTML = `
+    <h5>Harry Turner</h5>
+  `
+  sidebar.append(usernameEl);
+}
+
+// add event info to side bar
+function addEvenetToSideBar() {
+  eventEl = document.createElement('div');
+  eventEl.className = 'event-info';
+  eventEl.innerHTML = `
+    <h6 style='margin-bottom: 30px;'>${state.selectedEvent.title}</h6>
+    <div id="accordion">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h5 class="mb-0">
+            <button class="btn collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+              Event Details
+            </button>
+          </h5>
+        </div>
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+          <div class="card-body">
+          <p style='font-size: 14px;'>Category: ${state.selectedEvent.category}<br>
+          Local Ranking: ${state.selectedEvent.rank ? `${state.selectedEvent.rank}` : '1'}<br>
+          Start Time: ${state.selectedEvent.start.split(/T|:00Z/)[1]}<br>
+          ${ state.selectedEvent.duration ? `End Time: ${state.selectedEvent.end.split(/T|:00Z/)[1]}` : '' }
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h5 class="mb-0">
+            <button class="btn collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              About the Event
+            </button>
+          </h5>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+          <div class="card-body">
+            <p style='font-size: 14px;'>${state.selectedEvent.description !== '' ? `${state.selectedEvent.description}` : 'No information has been provided about this event please visit there website for further details.'}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+  sidebar.append(eventEl)
+}
+
+// add add button to the side bar
+function addAddBtn() {
+  const addBtn = document.createElement('button')
+  addBtn.className = 'btn btn-light add-btn'
+  addBtn.innerText = 'Add to Night'
+  sidebar.append(addBtn)
+}
+
+// populate entire side bar
+function addAllToSideBar() {
+  addUserToSideBar()
+  addEvenetToSideBar()
+  addAddBtn()
+}
+// ---------------------- map stuff -------------------------------
 
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
@@ -172,12 +256,15 @@ const geocoder = new MapboxGeocoder({
 const findLocation = map.addControl(geocoder);
 
 // Here's the code for locating the user, need to have event listener for if either this or the findLocation is clicked. And then to find events based on that
-const userLocation = map.addControl(new mapboxgl.GeolocateControl({
-positionOptions: {
-enableHighAccuracy: true
-},
-trackUserLocation: true
-}));
+const tracker = new mapboxgl.GeolocateControl({
+  positionOptions: {
+    enableHighAccuracy: true
+  },
+  trackUserLocation: true
+});
+
+const userLocation = map.addControl(tracker);
+
 
 // After the map style has loaded on the page, add a source layer and default
 // styling for a single point.
@@ -200,14 +287,26 @@ trackUserLocation: true
     }
   });
 
-// Center map on the coordinates of any clicked marker
 
 // Listen for the `result` event from the MapboxGeocoder that is triggered when a user
 // makes a selection and add a symbol that matches the result.
   geocoder.on('result', function(ev) {
     map.getSource('single-point').setData(ev.result.geometry);
     state.currentLocation  = geocoder._map._easeOptions.center;
-    getEventsFromUserLocation(1);
+    getEventsFromUserLocation(2);
     addEventListenerToMarkers();
   });
+
+  tracker.on('geolocate', ev => {
+    state.userLocationClicked = true;
+    const userLoc = [ ev.coords.longitude, ev.coords.latitude ]
+    state.currentLocation = userLoc;
+    getEventsFromUserLocation(2);
+    addEventListenerToMarkers();
+  })
 });
+
+// event listener to see if user clicks on find current location button
+function userLocationBtnClicked() {
+
+}
