@@ -55,6 +55,10 @@ body{
   display: none;
 }
 
+#side-nav .hide {
+  display: none;
+}
+
 .info {
    position:absolute;
    top:10px;
@@ -110,6 +114,13 @@ background: #ee8a65;
   height: 25px;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.rest-marker {
+  background-color: cadetblue;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
 }
 
 .concert {

@@ -7,11 +7,15 @@ const btn = document.querySelector('#geocoder');
 const state = {
   date: todayDate(),
   clientToken: 'hS6UafQpEo2tCAKxSUcFP04hy48V02',
-  userLocationClicked: false,
+  tracker: false,
+  search: false,
   currentLocation: null, // [long, lat]
   events: [],
   selectedEvent: null,
   geojsonIcons: {},
+  markers: [],
+  selectedMarker: null,
+  unselectedMarkers: [],
   restaurants: []
 }
 
@@ -88,7 +92,7 @@ function getEventsFromUserLocation(range=2) {
     // .then(resp => resp.json())
 
   // will return an array of events within a specific range
-  return fetch(`https://api.predicthq.com/v1/events/?limit=40&within=${range}km@${userLatitude},${userLongitude}`, {
+  return fetch(`https://api.predicthq.com/v1/events/?within=${range}km@${userLatitude},${userLongitude}`, {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + state.clientToken
@@ -106,6 +110,7 @@ function getEventsLocation(array) {
     "features": []
   }
   state.events.forEach(convertToGeoJSON);
+  renderMarkers();
 }
 
 // renders an icon for each event and places it in there correct position on map
@@ -133,7 +138,6 @@ function convertToGeoJSON(event) {
      }
   };
   state.geojsonIcons.features.push(icon);
-  renderMarkers();
 }
 
 // render icons onto page
@@ -160,14 +164,15 @@ function renderMarkers() {
         markerEl.className = 'marker';
     }
     markerEl.dataset.id = marker.properties.id;
-    new mapboxgl.Marker(markerEl)
+    const mapMarker = new mapboxgl.Marker(markerEl)
       .setLngLat(marker.geometry.coordinates)
       .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
         .setHTML(`
           <h6>${marker.properties.title}</h6>
-          <button type='button' class='btn btn-light rest-btn'>Find Restaurants Nearby</button>
+          <button type='button' class='rest-btn hide'>Find Restaurants Nearby</button>
         `))
       .addTo(map);
+    state.markers.push(mapMarker);
   })
 }
 
@@ -176,7 +181,8 @@ function addEventListenerToMarkers(){
   document.addEventListener('click', event => {
     if(event.target.className.includes('marker')) {
       const eventId = event.target.dataset.id;
-      state.selectedEvent = state.events.filter( event => event.id === eventId )[0];
+      state.selectedEvent = state.events.filter(event => event.id === eventId )[0];
+      state.selectedMarker = state.markers.filter(marker => eventId === marker._element.dataset.id)[0];
       map.flyTo({center: state.selectedEvent.location});
       document.querySelector('#map').style.width = '80%';
       document.querySelector('#map').style.float = 'right';
@@ -186,6 +192,23 @@ function addEventListenerToMarkers(){
     }
   })
 }
+
+// remove unselected markers
+function removeUnselectedMarkers() {
+  const unselectedMarkers = [];
+  state.markers.forEach( marker => {
+    if(marker !== state.selectedMarker){
+      unselectedMarkers.push(marker)
+    }
+  })
+  removeMarkers(unselectedMarkers);
+}
+
+// remove all markers
+function removeMarkers(array) {
+  array.forEach(marker => marker.remove())
+}
+
 
 // -------------------- populate the side navbar -------------------------
 // add user to nav bar
@@ -246,7 +269,9 @@ function addAddBtn() {
   const addBtn = document.createElement('button')
   addBtn.className = 'btn btn-light add-btn'
   addBtn.innerText = 'Add to Night'
-  // addBtn.addEvent
+  addBtn.addEventListener('click', () => {
+    document.querySelector('.rest-btn').classList.remove('hide');
+  })
   sidebar.append(addBtn)
 }
 
@@ -256,6 +281,7 @@ function addAllToSideBar() {
   addEvenetToSideBar()
   addAddBtn()
 }
+
 // ---------------------- map stuff -------------------------------
 
 const geocoder = new MapboxGeocoder({
@@ -301,6 +327,11 @@ const userLocation = map.addControl(tracker);
 // Listen for the `result` event from the MapboxGeocoder that is triggered when a user
 // makes a selection and add a symbol that matches the result.
   geocoder.on('result', function(ev) {
+    if(!state.search){
+      state.search = true;
+    } else {
+      removeMarkers(state.markers)
+    }
     map.getSource('single-point').setData(ev.result.geometry);
     state.currentLocation  = geocoder._map._easeOptions.center;
     getEventsFromUserLocation(2);
@@ -308,21 +339,25 @@ const userLocation = map.addControl(tracker);
   });
 
   tracker.on('geolocate', ev => {
-    state.userLocationClicked = true;
-    const userLoc = [ ev.coords.longitude, ev.coords.latitude ]
-    state.currentLocation = userLoc;
-    getEventsFromUserLocation(2);
-    addEventListenerToMarkers();
-    restaurantBtnListener();
+    if(!state.tracker) {
+      state.search = true;
+      state.tracker = true;
+      const userLoc = [ ev.coords.longitude, ev.coords.latitude ]
+      state.currentLocation = userLoc;
+      getEventsFromUserLocation(2);
+      addEventListenerToMarkers();
+      restaurantBtnListener();
+    }
   })
 });
 
-// ---------------------------------- restaurants ----------------------------------------
+// ---------------------------- restaurants -----------------------------------
 // add event listener to find restaurant button
 function restaurantBtnListener() {
   document.addEventListener('click', event => {
     if(event.target.className.includes('rest-btn')) {
-      getNearbyRestaurants()
+      removeUnselectedMarkers();
+      getNearbyRestaurants();
     }
   })
 }
@@ -335,22 +370,46 @@ const getNearbyRestaurants = () => {
     location: markerLatLng,
     radius: '500',
     type: ['restaurant']
-  }
-  service.nearbySearch(request, (places) => places.forEach(renderPlace));
+  };
+  state.restaurants = [];
+  let i = 0;
+  service.nearbySearch(request, (places) => {
+    places.forEach((place, i) => renderPlace(place, i))
+    renderRestaurantMarkers();
+  })
 };
 
-const renderPlace = place => {
+const renderPlace = (place, i) => {
   const placeName = place.name
-  const placeCoordinates = [place.geometry.location.lat(), place.geometry.location.lng()]
-  // const placeOpenNow = place.opening_hours.open_now
+  const placeCoordinates = [place.geometry.location.lng(), place.geometry.location.lat()]
+  const placeTotalReviews = place.user_ratings_total
   const placeRating = place.rating
   const placePriceLevel = place.price_level
   const newRestaurant = {
+    id: i,
     name: placeName,
     coordinates: placeCoordinates,
-    // openNow: placeOpenNow,
+    totalReviews: placeTotalReviews,
     rating: placeRating,
     priveLevel: placePriceLevel
   }
-  state.restaurants.push(newRestaurant)
+  state.restaurants.push(newRestaurant);
+  ++i;
+}
+
+// render restaurant markers
+function renderRestaurantMarkers() {
+  debugger
+  state.restaurants.forEach( marker => {
+    const markerEl = document.createElement('div');
+    markerEl.dataset.id = marker.id;
+    markerEl.className = 'rest-marker';
+    const mapMarker = new mapboxgl.Marker(markerEl)
+      .setLngLat(marker.coordinates)
+      .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+        .setHTML(`
+          <h6>${marker.name}</h6>
+        `))
+      .addTo(map);
+  })
 }
