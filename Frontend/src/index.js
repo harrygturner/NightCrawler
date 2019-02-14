@@ -256,7 +256,7 @@ function addEventToSideBar() {
         </div>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
           <div class="card-body">
-            <p style='font-size: 14px;'>${state.selectedEvent.description !== '' ? `${truncate(state.selectedEvent.description, 80)}...` : 'No information has been provided about this event please visit their website for further details.'}</p>
+            <p style='font-size: 14px;'>${state.selectedEvent.description !== '' ? `${truncate(state.selectedEvent.description, 80)}...` : 'No information has been provided about this event please visit there website for further details.'}</p>
           </div>
         </div>
       </div>
@@ -399,6 +399,7 @@ const renderPlace = (place, i) => {
 
 // render restaurant markers
 function renderRestaurantMarkers() {
+  debugger
   state.restaurants.forEach( marker => {
     const markerEl = document.createElement('div');
     markerEl.dataset.id = marker.id;
