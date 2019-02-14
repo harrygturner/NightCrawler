@@ -55,7 +55,7 @@ map.on('load', function() {
 // ------------------------ Format Date ---------------------------------
 
 function formatDate(date) {
-    var d = new Date(date),
+    let d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear();
@@ -223,7 +223,7 @@ function addUserToSideBar() {
 }
 
 // add event info to side bar
-function addEvenetToSideBar() {
+function addEventToSideBar() {
   eventEl = document.createElement('div');
   eventEl.className = 'event-info';
   eventEl.innerHTML = `
@@ -279,7 +279,7 @@ function addAddBtn() {
 // populate entire side bar
 function addAllToSideBar() {
   addUserToSideBar()
-  addEvenetToSideBar()
+  addEventToSideBar()
   addAddBtn()
 }
 
@@ -363,7 +363,6 @@ function restaurantBtnListener() {
   })
 }
 
-// attempt at trying to start the google place search
 const getNearbyRestaurants = () => {
   const service = new google.maps.places.PlacesService(document.createElement('div'))
   const markerLatLng = new google.maps.LatLng({lat: state.selectedEvent.location[1], lng: state.selectedEvent.location[0]})
@@ -415,6 +414,8 @@ function renderRestaurantMarkers() {
   })
 }
 
+// ---------------------------------- bars ----------------------------------------
+
 const getNearbyBars = () => {
   const service = new google.maps.places.PlacesService(document.createElement('div'))
   const markerLatLng = new google.maps.LatLng({lat: state.selectedEvent.location[1], lng: state.selectedEvent.location[0]})
@@ -435,7 +436,7 @@ const renderBar = bar => {
     name: barName,
     coordinates: barCoordinates,
     rating: barRating,
-    priveLevel: barPriceLevel
+    priveLevel: restaurantPriceLevel
   }
   state.bars.push(newBar)
 }
