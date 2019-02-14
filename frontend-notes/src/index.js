@@ -12,7 +12,8 @@ const state = {
   events: [],
   selectedEvent: null,
   geojsonIcons: {},
-  restaurants: []
+  restaurants: [],
+  bars: []
 }
 
 //------------------------- Map Box API -----------------------------
@@ -336,21 +337,45 @@ const getNearbyRestaurants = () => {
     radius: '500',
     type: ['restaurant']
   }
-  service.nearbySearch(request, (places) => places.forEach(renderPlace));
+  service.nearbySearch(request, (restaurants) => restaurants.forEach(renderRestaurant));
 };
 
-const renderPlace = place => {
-  const placeName = place.name
-  const placeCoordinates = [place.geometry.location.lat(), place.geometry.location.lng()]
-  // const placeOpenNow = place.opening_hours.open_now
-  const placeRating = place.rating
-  const placePriceLevel = place.price_level
+const renderRestaurant = restaurant => {
+  const restaurantName = restaurant.name
+  const restaurantCoordinates = [restaurant.geometry.location.lat(), restaurant.geometry.location.lng()]
+  // const restaurantOpenNow = restaurant.opening_hours.open_now
+  const restaurantRating = restaurant.rating
+  const restaurantPriceLevel = restaurant.price_level
   const newRestaurant = {
-    name: placeName,
-    coordinates: placeCoordinates,
-    // openNow: placeOpenNow,
-    rating: placeRating,
-    priveLevel: placePriceLevel
+    name: restaurantName,
+    coordinates: restaurantCoordinates,
+    rating: restaurantRating,
+    priveLevel: restaurantPriceLevel
   }
   state.restaurants.push(newRestaurant)
+}
+
+const getNearbyBars = () => {
+  const service = new google.maps.places.PlacesService(document.createElement('div'))
+  const markerLatLng = new google.maps.LatLng({lat: state.selectedEvent.location[1], lng: state.selectedEvent.location[0]})
+  const request = {
+    location: markerLatLng,
+    radius: '500',
+    type: ['bar']
+  }
+  service.nearbySearch(request, (bars) => bars.forEach(renderBar));
+}
+
+const renderBar = bar => {
+  const barName = bar.name
+  const barCoordinates = [bar.geometry.location.lat(), bar.geometry.location.lng()]
+  const barRating = bar.rating
+  const barPriceLevel = bar.price_level
+  const newBar = {
+    name: barName,
+    coordinates: barCoordinates,
+    rating: barRating,
+    priveLevel: barPriceLevel
+  }
+  state.bars.push(newBar)
 }
