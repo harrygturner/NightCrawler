@@ -16,7 +16,8 @@ const state = {
   markers: [],
   selectedMarker: null,
   unselectedMarkers: [],
-  restaurants: []
+  restaurants: [],
+  bars: []
 }
 
 //------------------------- Map Box API -----------------------------
@@ -412,4 +413,29 @@ function renderRestaurantMarkers() {
         `))
       .addTo(map);
   })
+}
+
+const getNearbyBars = () => {
+  const service = new google.maps.places.PlacesService(document.createElement('div'))
+  const markerLatLng = new google.maps.LatLng({lat: state.selectedEvent.location[1], lng: state.selectedEvent.location[0]})
+  const request = {
+    location: markerLatLng,
+    radius: '500',
+    type: ['bar']
+  }
+  service.nearbySearch(request, (bars) => bars.forEach(renderBar));
+}
+
+const renderBar = bar => {
+  const barName = bar.name
+  const barCoordinates = [bar.geometry.location.lat(), bar.geometry.location.lng()]
+  const barRating = bar.rating
+  const barPriceLevel = bar.price_level
+  const newBar = {
+    name: barName,
+    coordinates: barCoordinates,
+    rating: barRating,
+    priveLevel: barPriceLevel
+  }
+  state.bars.push(newBar)
 }
