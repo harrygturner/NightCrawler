@@ -1,14 +1,51 @@
-# README
+# 💃 NightCrawler 🕺
 
-# night-out-planner
+We created a night-out planner which allows you to search for a inputed location, or use your current location, and find nearby events. You can then add an event to your 'Night-Out'. From here, you are given the option to find nearby restaurants and bars, and add them to your night aswell. We created a database for our users to save their nights and allow different users to log in and out. We called on 3 API's; Google Maps, MapBox and Predict HQ, which we will go into more detail below.
 
-A javascript file that creates an interactibe website displaying events around the user's current or inputed location. 
+## 🧞 About Us 🧜‍
+
+Night-Out Planner was created by Harry ([harrygturner](https://github.com/harrygturner)) and Claudia ([claudifox](https://github.com/claudifox)).
+
+## MVP 🎫🎫🎫🎫
+
+We wanted our app to fulfill the following MVPs:
+1. User should be able to search for a location 
+2. User should be able to find events in a nearby radius
+3. User should be able to find the top 20 events as rated by Predict HQ
+4. User should be able to log in
+5. User should be able to save events, and have this persist on the database
+
+## Stretch Goals 🍔🍔🍔🍔
+
+In order to further our app, we wanted to:
+1. Allow a user to search for restaurants in the nearby vicinity to the event 
+2. Allow a user to save their restaurant choice to their night, and have this persist as a whole 'night-out' on the database
+3. Implement CSS which is aesthetically pleasing to work with MapBox's styling
+
+## Super Stretch Goals 🍸🍸🍸🍸
+
+We wanted to also achieve these goals if we got the time towards the end of the week:
+1. Allow a user to search for both restaurants and bars, and add a mixture of both to their 'night-out'
+2. When a user selects an events and adds it to their night, the other events are removed from the map
+
+## APIs
+
+[MapBox API] (https://docs.mapbox.com/mapbox-gl-js/overview/)
+We used MapBox to render the map on the page, and built layers to create the different markers for events. 
+[Google Places API] (https://developers.google.com/places/web-service/intro)
+We used Google Places to find nearby restaurants and bars to events, we used the coordinates of our chosen event to find the 20 nearest restaurants/bars.  
+[Predict HQ API] (https://developer.predicthq.com/)
+We used Predict HQ to find the top 20 rated events near to your chosen/current location. This can vary from DJ residencies, to plays, to lectures.
+
+Our biggest issue with the APIs was that Google and MapBox have their coordinates in the opposite order. Make sure you have you longitude and latitude the right way round!
 
 ## Demo & Tutorial
 
-## FAQ, Technical Documentation, and API Reference
 
-## Project Requirements
+
+
+
+## The Project Requirements
 
 Must be a HTML/CSS/JS frontend with a Rails API backend. These should live in two separate repositories. All interactions between the client and the server should be handled asynchronously (AJAX).
 
