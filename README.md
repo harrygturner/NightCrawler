@@ -6,7 +6,7 @@ We created a night-out planner which allows you to search for a inputed location
 
 Night-Out Planner was created by Harry ([harrygturner](https://github.com/harrygturner)) and Claudia ([claudifox](https://github.com/claudifox)).
 
-## MVP 🎭🎭🎭🎭
+## MVP 🎭
 
 We wanted our app to fulfill the following MVPs:
 1. User should be able to search for a location 
@@ -15,14 +15,14 @@ We wanted our app to fulfill the following MVPs:
 4. User should be able to log in
 5. User should be able to save events, and have them persist on the database
 
-## Stretch Goals 🍔🍔🍔🍔
+## Stretch Goals 🍔🍔
 
 In order to further our app, we wanted to:
 1. Allow a user to search for restaurants in the nearby vicinity to the event 
 2. Allow a user to save their restaurant choice to their night, and have them persist as a whole 'night-out' on the database
 3. Implement CSS which is aesthetically pleasing to work with MapBox's styling
 
-## Super Stretch Goals 🍸🍸🍸🍸
+## Super Stretch Goals 🍸🍸🍸
 
 We wanted to also achieve these goals if we got the time towards the end of the week:
 1. Allow a user to search for both restaurants and bars, and add a mixture of both to their 'night-out'
