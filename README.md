@@ -39,7 +39,7 @@ We used Google Places to find nearby restaurants and bars to events, we used the
 ([Predict HQ API](https://developer.predicthq.com/)) --
 We used Predict HQ to find the top 20 rated events near to your chosen/current location. This can vary from DJ residencies, to plays, to lectures.
 
-Our biggest issue with the APIs was that Google and MapBox have their coordinates in the opposite order. Make sure you have you longitude and latitude the right way round!
+Our biggest issue with the APIs was that Google and MapBox take coordinates in the opposite order. Make sure you have you longitude and latitude the right way round!
 
 ## Demo & Tutorial
 
