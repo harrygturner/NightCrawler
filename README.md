@@ -13,13 +13,13 @@ We wanted our app to fulfill the following MVPs:
 2. User should be able to find events in a nearby radius
 3. User should be able to find the top 20 events as rated by Predict HQ
 4. User should be able to log in
-5. User should be able to save events, and have this persist on the database
+5. User should be able to save events, and have them persist on the database
 
 ## Stretch Goals 🍔🍔🍔🍔
 
 In order to further our app, we wanted to:
 1. Allow a user to search for restaurants in the nearby vicinity to the event 
-2. Allow a user to save their restaurant choice to their night, and have this persist as a whole 'night-out' on the database
+2. Allow a user to save their restaurant choice to their night, and have them persist as a whole 'night-out' on the database
 3. Implement CSS which is aesthetically pleasing to work with MapBox's styling
 
 ## Super Stretch Goals 🍸🍸🍸🍸
