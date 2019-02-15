@@ -6,7 +6,7 @@ We created a night-out planner which allows you to search for a inputed location
 
 Night-Out Planner was created by Harry ([harrygturner](https://github.com/harrygturner)) and Claudia ([claudifox](https://github.com/claudifox)).
 
-## MVP 🎫🎫🎫🎫
+## MVP 🎭🎭🎭🎭
 
 We wanted our app to fulfill the following MVPs:
 1. User should be able to search for a location 
@@ -30,7 +30,7 @@ We wanted to also achieve these goals if we got the time towards the end of the 
 
 ## APIs
 
-([MapBoxAPI](https://docs.mapbox.com/mapbox-gl-js/overview)) --
+([MapBox API](https://docs.mapbox.com/mapbox-gl-js/overview)) --
 We used MapBox to render the map on the page, and built layers to create the different markers for events. 
 
 ([Google Places API](https://developers.google.com/places/web-service/intro)) --
