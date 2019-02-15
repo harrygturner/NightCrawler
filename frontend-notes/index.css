@@ -4,8 +4,13 @@ html, body {
   padding: 0;
   box-sizing: border-box;
 }
+
 body{
   display: flex;
+}
+
+#title-box form input {
+  margin-bottom: 10px;
 }
 
 #map {
@@ -25,6 +30,7 @@ body{
   -webkit-transition: width 2s;
   width: 20%;
   float: left;
+  background: #76b0b2a3;
 }
 
 .username {
@@ -52,10 +58,6 @@ body{
 }
 
 .hide {
-  display: none;
-}
-
-#side-nav .hide {
   display: none;
 }
 
@@ -104,7 +106,7 @@ background: #ee8a65;
   display: flex;
 }
 
-.marker {
+.icon {
   background-color: white;
   background-size: cover;
   border: 1px solid black;
@@ -121,26 +123,35 @@ background: #ee8a65;
   border-radius: 50%;
   width: 15px;
   height: 15px;
+  cursor: pointer;
+}
+
+.bar-marker {
+  background-color: red;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
 }
 
 .concert {
-  background-image: url('../public/images/piano.png');
+  background-image: url('images/piano.png');
 }
 
 .sport {
-  background-image: url('../public/images/soccer-ball.png');
+  background-image: url('images/soccer-ball.png');
 }
 
 .conference {
-  background-image: url('../public/images/presentation.png');
+  background-image: url('images/presentation.png');
 }
 
 .theatre {
-  background-image: url('../public/images/masks.png');
+  background-image: url('images/masks.png');
 }
 
 .community {
-  background-image: url('../public/images/beer.png');
+  background-image: url('images/beer.png');
 }
 
 .user-info {
@@ -157,4 +168,18 @@ background: #ee8a65;
   margin-top: 20px;
   padding: 0px 20px;
   margin-left: 20px;
+}
+
+.rest-btn {
+  margin: 0px 0px 15px 8px;
+}
+
+.bar-btn {
+  margin-left: 8px;
+}
+
+.today-events {
+  padding: 2px 0px 0px 0px;
+  margin: 0px 3px;
+  border-radius: 8px;
 }

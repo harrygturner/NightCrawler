@@ -5,11 +5,20 @@
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
 
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" href="index.css">
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css" integrity="sha384-PDle/QlgIONtM1aqA2Qemk5gPOE7wFq8+Em+G/hmo5Iq0CCmYZLv3fVRDJ4MMwEA" crossorigin="anonymous">
     <title>Night Out</title>
   </head>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+    @import url('https://fonts.googleapis.com/css?family=Fjalla+One');
+    @import url('https://fonts.googleapis.com/css?family=Karla');
+    @import url('https://fonts.googleapis.com/css?family=Special+Elite');
+    body {
+      font-family: Karla;
+    }
+  </style>
   <body>
     <!-- <div class='container'> -->
     <div id="side-nav" class="hide">
@@ -17,6 +26,24 @@
     </div>
 
      <div id='map'>
+     </div>
+     <div id='title-box' style='
+         height: 200px;
+         width: 600px;
+         position: absolute;
+         bottom: 50%;
+         margin-bottom: -100px;
+         left: 50%;
+         margin-left: -300px;
+         background-color: rgba(255, 255, 255, .9);
+         padding: 15px;
+         border-radius: 8px;
+         text-align: center;
+         font-family: Special Elite;'>
+       <h2 style='margin: 20px;'>NightCrawler</h2>
+       <p>No better place to go when planning a night out!</p>
+       <button style='margin-right: 10px;' class="btn btn-info signup-btn">Sign up</button>
+       <button style='margin-left: 10px;' class="btn btn-info login-btn">Log in</button>
      </div>
      <div id='geocoder' class='geocoder'></div>
 
