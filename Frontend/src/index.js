@@ -63,10 +63,10 @@ function renderSignUpForm() {
       <input type="text" name="username" style="margin-bottom: 20px;"><br>
       Password:<br>
       <input type="password" name="username" style="margin-bottom: 20px;"><br>
-      <input type="submit" value="Sign Up" class='btn btn-info'>
+      <input type="button" value="Sign Up" class='btn btn-info'>
     </form>
   `
-  const subBtn = signInEl.querySelector('input[type=submit]');
+  const subBtn = signInEl.querySelector('input[type=button]');
   subBtn.addEventListener('click', registersAndWelcomeUser);
 }
 
@@ -82,7 +82,7 @@ function registersAndWelcomeUser() {
       <h2 style='margin: 20px;'>NightCrawler</h2>
       <p>Hello ${fullname}, let's start planning your night. If you'd like to search for events around your current location please click on the target icon, or if you want to search a location of your choice just type it in the search bar.</p>
   `
-  // renderGeolocaterAndSearchBarOnMap();
+  renderGeolocaterAndSearchBarOnMap();
 }
 
 // render log in form
@@ -97,7 +97,7 @@ function renderLogInForm() {
       <input type="text" name="lastname" style="margin-bottom: 20px;"><br>
       Password:<br>
       <input type="password" name="username" style="margin-bottom: 20px;"><br>
-      <input type="submit" value="Log In" class='btn btn-info'>
+      <input type="button" value="Log In" class='btn btn-info'>
     </form>
   `
 }
@@ -170,24 +170,28 @@ function truncate(str, no_words) {
 function getEventsFromUserLocation(range=2) {
   const userLongitude = state.currentLocation[0]
   const userLatitude = state.currentLocation[1]
+  if(userLongitude && userLatitude) {
 
-  // will return a bunch of events a hazy distance from loactaion
-  // return fetch(`https://api.predicthq.com//v1/events/?location_around.origin=${userLatitude},${userLongitude}`, {
-    // method: 'GET',
-    // headers: {
-    //   'Authorization': 'Bearer ' + state.clientToken
-    // })
-    // .then(resp => resp.json())
+    // will return a bunch of events a hazy distance from loactaion
+    // return fetch(`https://api.predicthq.com//v1/events/?location_around.origin=${userLatitude},${userLongitude}`, {
+      // method: 'GET',
+      // headers: {
+      //   'Authorization': 'Bearer ' + state.clientToken
+      // })
+      // .then(resp => resp.json())
 
-  // will return an array of events within a specific range
-  return fetch(`https://api.predicthq.com/v1/events/?within=${range}km@${userLatitude},${userLongitude}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': 'Bearer ' + state.clientToken
-    }
-  })
-    .then(resp => resp.json())
-    .then(getEventsLocation);
+    // will return an array of events within a specific range
+    return fetch(`https://api.predicthq.com/v1/events/?within=${range}km@${userLatitude},${userLongitude}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + state.clientToken
+      }
+    })
+      .then(resp => resp.json())
+      .then(getEventsLocation);
+  } else if(!userLongitude || !userLatitude) {
+    alert('You need to be more specific when searching for a location!')
+  }
 }
 
 // get location of all the events
@@ -398,7 +402,8 @@ function addEventToSchedule() {
 }
 
 // -------------------------- map stuff -------------------------------
-// function renderGeolocaterAndSearchBarOnMap() {
+// renders search bar and geolocater
+function renderGeolocaterAndSearchBarOnMap() {
   const geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     zoom: 14.5
@@ -415,23 +420,49 @@ function addEventToSchedule() {
   });
 
   const userLocation = map.addControl(tracker);
+  // Listen for the `result` event from the MapboxGeocoder that is triggered when a user
+  // makes a selection and add a symbol that matches the result.
+  geocoder.on('result', function(ev) {
+    if(!state.search){
+      state.search = true;
+    } else {
+      removeMarkers(state.markers)
+    }
+    signInEl.remove();
+    map.getSource('single-point').setData(ev.result.geometry);
+    state.currentLocation  = geocoder._map._easeOptions.center;
+    getEventsFromUserLocation(2);
+    addEventListenerToMarkers();
+  });
+
+  tracker.on('geolocate', ev => {
+    if(!state.tracker) {
+      signInEl.remove();
+      state.search = true;
+      state.tracker = true;
+      const userLoc = [ ev.coords.longitude, ev.coords.latitude ]
+      state.currentLocation = userLoc;
+      getEventsFromUserLocation(2);
+      addEventListenerToMarkers();
+      restaurantBtnListener();
+    }
+  })
+  eventListenerForAddRestToSchedule();
+}
 
 
-  // After the map style has loaded on the page, add a source layer and default
-  // styling for a single point.
-    map.on('load', function() {
 
-
-
-      map.addSource('single-point', {
+// After the map style has loaded on the page, add a source layer and default styling for a single point.
+function loadMap() {
+  map.on('load', function() {
+    map.addSource('single-point', {
         "type": "geojson",
         "data": {
-        "type": "FeatureCollection",
-        "features": []
-      }
-    });
-
-    map.addLayer({
+          "type": "FeatureCollection",
+          "features": []
+        }
+      });
+      map.addLayer({
       "id": "point",
       "source": "single-point",
       "type": "circle",
@@ -440,38 +471,9 @@ function addEventToSchedule() {
         "circle-color": "#007cbf"
       }
     });
-
-
-  // Listen for the `result` event from the MapboxGeocoder that is triggered when a user
-  // makes a selection and add a symbol that matches the result.
-    geocoder.on('result', function(ev) {
-      if(!state.search){
-        state.search = true;
-      } else {
-        removeMarkers(state.markers)
-      }
-      signInEl.remove();
-      map.getSource('single-point').setData(ev.result.geometry);
-      state.currentLocation  = geocoder._map._easeOptions.center;
-      getEventsFromUserLocation(2);
-      addEventListenerToMarkers();
-    });
-
-    tracker.on('geolocate', ev => {
-      if(!state.tracker) {
-        signInEl.remove();
-        state.search = true;
-        state.tracker = true;
-        const userLoc = [ ev.coords.longitude, ev.coords.latitude ]
-        state.currentLocation = userLoc;
-        getEventsFromUserLocation(2);
-        addEventListenerToMarkers();
-        restaurantBtnListener();
-      }
-    })
-    eventListenerForAddRestToSchedule();
   });
-// }
+}
+
 
 // ---------------------------- restaurants -----------------------------------
 // add event listener to find restaurant and bar button
@@ -563,21 +565,6 @@ function renderRestaurantMarkers() {
   })
 }
 
-// add event listener to document for when bars and restaurants are added to sidebar schedule
-function eventListenerForAddRestToSchedule() {
-  document.addEventListener('click', event => {
-    if(event.target.className.includes('add-rest-btn')) {
-      state.restaurantAdded = true;
-      addRestToSchedule();
-      removeUnselectedRestaurantMarkers();
-    } else if(event.target.className.includes('add-bar-btn')) {
-      state.barAdded = true;
-      addBarToSchedule();
-      removeUnselectedBarMarkers();
-    }
-  })
-}
-
 // remove unselected restaurant markers
 function removeUnselectedRestaurantMarkers() {
   const unselectedMarkers = [];
@@ -605,6 +592,7 @@ function addRestToSchedule() {
   schedule.append(rInfo);
   document.querySelector('.rest-btn').remove();
 }
+
 
 // ---------------------------------- bars ----------------------------------------
 
@@ -695,6 +683,25 @@ function removeUnselectedBarMarkers() {
   })
 }
 
+// add event listener to document for when bars and restaurants are added to sidebar schedule
+function eventListenerForAddRestToSchedule() {
+  document.addEventListener('click', event => {
+    if(event.target.className.includes('add-rest-btn')) {
+      state.restaurantAdded = true;
+      addRestToSchedule();
+      removeUnselectedRestaurantMarkers();
+    } else if(event.target.className.includes('add-bar-btn')) {
+      state.barAdded = true;
+      addBarToSchedule();
+      removeUnselectedBarMarkers();
+    }
+  })
+}
 // -------------------- on page load -----------------------
 
-signingInEventListener();
+function initialization() {
+  loadMap();
+  signingInEventListener();
+}
+
+initialization();

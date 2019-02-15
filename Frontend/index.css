@@ -19,7 +19,6 @@ body{
   bottom:0;
   height:100%;
   width: 100%;
-  -webkit-transition-timing-function: ease-in;
   -webkit-transition: width 2s;
   transition: width 2s;
 }
@@ -179,7 +178,11 @@ background: #ee8a65;
 }
 
 .today-events {
-  padding: 2px 0px 0px 0px;
+  padding: 2px 0px 0px 5px;
   margin: 0px 3px;
   border-radius: 8px;
+}
+
+.card-body {
+  background-color: #76b0b2a3;
 }
