@@ -30,11 +30,13 @@ We wanted to also achieve these goals if we got the time towards the end of the 
 
 ## APIs
 
-([MapBox API] (https://docs.mapbox.com/mapbox-gl-js/overview/))
+([MapBoxAPI](https://docs.mapbox.com/mapbox-gl-js/overview)) --
 We used MapBox to render the map on the page, and built layers to create the different markers for events. 
-([Google Places API] (https://developers.google.com/places/web-service/intro))
+
+([Google Places API](https://developers.google.com/places/web-service/intro)) --
 We used Google Places to find nearby restaurants and bars to events, we used the coordinates of our chosen event to find the 20 nearest restaurants/bars.  
-([Predict HQ API] (https://developer.predicthq.com/))
+
+([Predict HQ API](https://developer.predicthq.com/)) --
 We used Predict HQ to find the top 20 rated events near to your chosen/current location. This can vary from DJ residencies, to plays, to lectures.
 
 Our biggest issue with the APIs was that Google and MapBox have their coordinates in the opposite order. Make sure you have you longitude and latitude the right way round!
