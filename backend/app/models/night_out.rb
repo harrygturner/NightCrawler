@@ -1,0 +1,2 @@
+class NightOut < ApplicationRecord
+end
