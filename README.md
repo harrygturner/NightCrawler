@@ -2,7 +2,7 @@
 
 We created a night-out planner which allows you to search for a inputed location, or use your current location, and find nearby events. You can then add an event to your 'Night-Out'. From here, you are given the option to find nearby restaurants and bars, and add them to your night aswell. We created a database for our users to save their nights and allow different users to log in and out. We called on 3 API's; Google Maps, MapBox and Predict HQ, which we will go into more detail below.
 
-## 🧞 About Us 🧜‍
+## 🧞 About Us 🧜‍♀️
 
 Night-Out Planner was created by Harry ([harrygturner](https://github.com/harrygturner)) and Claudia ([claudifox](https://github.com/claudifox)).
 
