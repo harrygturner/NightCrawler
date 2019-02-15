@@ -82,7 +82,7 @@ function registersAndWelcomeUser() {
       <h2 style='margin: 20px;'>NightCrawler</h2>
       <p>Hello ${fullname}, let's start planning your night. If you'd like to search for events around your current location please click on the target icon, or if you want to search a location of your choice just type it in the search bar.</p>
   `
-  renderGeolocaterAndSearchBarOnMap();
+  // renderGeolocaterAndSearchBarOnMap();
 }
 
 // render log in form
