@@ -45,6 +45,16 @@ Our biggest issue with the APIs was that Google and MapBox take coordinates in t
 
 [Demo](https://youtu.be/tLDpoDqMook)
 
+## Tech/Frameworks Used
+
+<b>Built with</b>
+- [Vanilla JS](https://www.javascript.com/)
+- [Ruby on Rails](https://rubyonrails.org/)
+- CSS
+- [Google Places API](https://developers.google.com/places/web-service/intro)
+- [MapBox](https://www.mapbox.com/)
+- [PredictHQ API](https://www.predicthq.com/)
+
 ## The Project Requirements
 
 Must be a HTML/CSS/JS frontend with a Rails API backend. These should live in two separate repositories. All interactions between the client and the server should be handled asynchronously (AJAX).
